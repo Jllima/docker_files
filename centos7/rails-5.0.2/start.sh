@@ -2,12 +2,12 @@
 
 __create_user() {
 # Create a user to SSH into as.
-useradd user
-SSH_USERPASS=newpass
-echo -e "$SSH_USERPASS\n$SSH_USERPASS" | (passwd --stdin user)
-echo ssh user password: $SSH_USERPASS
+useradd www-data
+SSH_USERPASS=root
+echo -e "$SSH_USERPASS\n$SSH_USERPASS" | (passwd --stdin www-data)
+echo ssh www-data password: $SSH_USERPASS
 
-echo "user ALL=(ALL) ALL" >> /etc/sudoers
+echo "www-data ALL=(ALL) ALL" >> /etc/sudoers
 }
 
 # Call all functions

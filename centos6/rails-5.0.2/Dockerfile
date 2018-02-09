@@ -13,8 +13,9 @@ RUN yum install -y sudo passwd openssh-server openssh-clients tar && \
     yum install -y libyaml-devel libffi-devel readline-devel zlib-devel gdbm-devel ncurses-devel && \
     yum install -y curl which gzip bzip2 zip which && \
     yum install -y mariadb-devel postgresql-libs postgresql-devel && \
-    yum install -y yum-utils libtool sqlite sqlite-devel imagemagick libmagickwand-dev && \
+    yum install -y yum-utils libtool sqlite sqlite-devel && \
     yum install -y kernel-headers --disableexcludes=all && \
+    yum install -y nginx && \
     curl --silent --location https://rpm.nodesource.com/setup_8.x | bash - &&\
     yum install -y nodejs && \
     curl -o /etc/yum.repos.d/yarn.repo https://dl.yarnpkg.com/rpm/yarn.repo && \
@@ -25,6 +26,8 @@ RUN yum install -y sudo passwd openssh-server openssh-clients tar && \
 # add epel repository
 RUN rpm -Uvh http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 
+# install imagemagik to paperclip
+RUN yum install -y ImageMagick ImageMagick-devel
 
 RUN (rpm -Uvh https://yum.puppetlabs.com/el/6/products/i386/puppetlabs-release-6-7.noarch.rpm; \
      yum install -y puppet puppet-server puppetserver facter hiera lsyncd sshpass)
@@ -51,7 +54,7 @@ RUN chmod 755 /start.sh
 RUN ./start.sh
 
 ########################################################################
-USER app
+USER www-data
 
 #install rvm, ruby and rails
 RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys D39DC0E3
@@ -63,7 +66,12 @@ RUN /bin/bash -l -c "echo 'gem: --no-ri --no-rdoc' > ~/.gemrc"
 RUN /bin/bash -l -c "gem install bundler --no-ri --no-rdoc"
 RUN /bin/bash -l -c "gem install rails -v 5.0.2"
 
+#######################################################################
+
 USER root
+
+# config ngnix
+#RUN service ngnix start
 
 #########################################################################
 # ports
